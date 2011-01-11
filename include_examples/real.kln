@@ -1,0 +1,59 @@
+// Real number functions.
+// Author: Francisco Mota
+// Date: October 21, 2010
+//
+// Klein doesn't have a built-in real number type, so this library
+// implements fixed point numbers.
+//
+// Real numbers are represented as integers because that works.
+
+realSCALE() : integer
+    // Determines the precision.
+    //   1    = 0 decimal places
+    //   10   = 1 d.p.
+    //   100  = 2 d.p.
+    //   1000 = 3 d.p.
+    // et cetera.
+    1000
+
+realSQRTEPS() : integer
+    // How far apart can the square root approximation be?
+    35
+
+real(n : integer) : integer
+    n * realSCALE()
+
+realAdd(a : integer, b : integer) : integer
+    a + b
+
+realSub(a : integer, b : integer) : integer
+    a - b
+
+realMul(a : integer, b : integer) : integer
+    a * b / realSCALE()
+
+realDiv(a : integer, b : integer) : integer
+    a * realSCALE() / b
+
+realFloor(a : integer) : integer
+    a / realSCALE()
+
+realCeil(a : integer) : integer
+    realFloor(a + realSCALE() - 1)
+
+realSqrt(a : integer) : integer
+    realSqrtApprox(a, real(2))
+
+realSqrtApprox(a : integer, n : integer) : integer
+    if realClose(a, realMul(n, n), realSQRTEPS()) then
+        n
+    else
+        realSqrtApprox(a, realAvg(n, realDiv(a,n)))
+    endif
+
+realClose(a : integer, b : integer, eps : integer) : boolean
+    realSub(a, eps) < b and b < realAdd(a, eps)
+
+realAvg(a : integer, b : integer) : integer
+    realAdd(a, b) / 2
+

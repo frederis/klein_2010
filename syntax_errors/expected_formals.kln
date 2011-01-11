@@ -1,0 +1,10 @@
+
+main( x:integer) :integer
+  fibonacci(x)
+    
+fibonacci( :integer ) :integer // expected IDENTIFIER, got COLON
+  if x = 0 or x = 1 then
+    x
+  else
+    fibonacci(x - 1) + fibonacci(x - 2)
+  endif

@@ -1,0 +1,25 @@
+
+#include "compare.kln"
+
+//includes and uses code from compare.kln
+//compares two numbers and prints out the greater of the two
+// prints out 2 if they are equal to each other.
+
+main ( x: integer, y: integer ) : integer
+	printGreater ( x, y ) 
+
+printGreater ( l: integer, m: integer ): integer
+	if compare( l, m ) then 
+		printFn(0)
+	else
+		if l < m then
+			printFn(m)
+		else
+			printFn(l)
+		endif	
+	endif
+
+printFn(n : integer) : integer
+	print(n)
+	n
+	

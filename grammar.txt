@@ -1,0 +1,46 @@
+
+program ::= definitions
+definitions ::= def definitions'
+definitions' ::= definitions
+               |
+def ::= IDENTIFIER LPAREN formals RPAREN COLON type body
+formals ::= nonemptyformals
+          |
+nonemptyformals ::= formal nonemptyformals'
+nonemptyformals' ::= COMMA nonemptyformals
+                   |
+formal ::= identifier COLON type
+type ::= BOOLEAN
+       | INTEGER
+body ::= print body
+       | expr
+print ::= PRINT LPAREN actuals RPAREN
+expr ::= boolexpr exprtail
+exprtail ::= OR expr
+           | AND expr
+           |
+boolexpr ::= term bootail
+bootail ::= LANGLE boolexpr
+          | EQUALS boolexpr
+          |
+term ::= factor termtail
+termtail ::= PLUS term
+           | MINUS term
+           |
+factor ::= atom factortail
+factortail ::= STAR factor
+             | DIVIDES factor
+             |
+atom ::= IF expr THEN expr ELSE expr ENDIF
+       | NOT atom
+       | identifier params
+       | LITERAL
+       | LPAREN expr RPAREN
+params ::= LPAREN actuals RPAREN
+         |
+actuals ::= nonemptyactuals
+          |
+nonemptyactuals ::= expr nonemptyactuals'
+nonemptyactuals' ::= COMMA nonemptyactuals
+                   |
+

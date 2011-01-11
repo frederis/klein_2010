@@ -1,0 +1,12 @@
+
+main( x:integer) :integer
+  if -1 < x // expected THEN got IDENTIFIER
+    fibonacci(x)
+  endif 
+    
+fibonacci( x:integer ) :integer
+  if x = 0 or x = 1 then
+    x
+  else
+    fibonacci(x - 1) + fibonacci(x - 2)
+  endif

@@ -1,0 +1,10 @@
+
+main( x:integer ) :integer
+  factorial(x)
+  
+factorial( x:integer ) :integer
+  if x then
+	  1
+  else
+	  x * factorial( x - 1)
+  endif

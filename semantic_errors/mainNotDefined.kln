@@ -1,0 +1,107 @@
+// - - - - - - - - - -
+// MAIN LIST FUNCTIONS
+// - - - - - - - - - -
+
+//
+// Creates a list containing the given integer
+// 
+// Valid integer values:  0 - 999999999
+//
+
+initializeList( x:integer ) : integer
+  convertToListVal(numOfDigits(x),x)
+
+
+appendToList( list:integer, val:integer ) : integer
+  list * expt(10,numOfDigits(val)) + convertToListVal(numOfDigits(val), val)
+
+
+getVal( list:integer, index:integer ) : integer
+  if index < 0 or not(index < length(list)) then
+    0
+  else
+    getValHelper(list,index)
+  endif
+
+length( list:integer ) : integer
+  lengthHelper(list,0)
+
+
+
+// - - - - - - - - - 
+//  LIST HELPERS
+// - - - - - - - - -
+
+convertToListVal( intLength:integer, val:integer ) : integer
+  expt(10,intLength) * intLength + val
+
+
+numOfDigits( x:integer ) : integer
+  numOfDigitsHelper(x,0)
+
+
+numOfDigitsHelper( x:integer, count:integer ) : integer
+  if x < 10 then
+    count + 1
+  else
+    numOfDigitsHelper(x/10,count+1)
+  endif
+ 
+   
+getValHelper( list:integer, index:integer ) : integer
+  if index = 0 then
+    readDigits(stripDigits(list,1),zeroIndexLength(list))
+  else
+    getValHelper(stripDigits(list,zeroIndexLength(list) + 1),index - 1)
+  endif
+
+readDigits( list:integer, numToRead:integer ) : integer
+  list/expt(10,numOfDigits(list)/numToRead)
+
+
+zeroIndexLength( list:integer ) : integer
+  list/expt(10,numOfDigits(list))
+
+
+stripDigits( list:integer, numToStrip:integer ) : integer
+  if numOfDigits(list) < numToStrip or numToStrip < 1 then
+    0
+  else
+    modulo(list,expt(10,numOfDigits(list) - 1)/expt(10,numToStrip - 1))
+  endif
+
+lengthHelper( list:integer, count:integer ) : integer
+  if list = 0 then
+    count
+  else
+    lengthHelper(stripDigits(list,zeroIndexLength(list)+1),count+1)
+  endif
+
+
+// - - - - - - - - -
+// GENERAL HELPERS
+// - - - - - - - - -
+
+//Think we have these in another file so I didn't bother to write them again
+
+//returns x modulo y
+
+//modulo( x:integer, y:integer ) : integer
+
+//returns x to the y power
+
+//expt( x:integer, y:integer ) : integer
+  
+expt( x : integer, y : integer) : integer
+   if 0 < y then
+      x * expt(x,y - 1)
+   else
+	  1
+   endif
+
+modulo( x : integer, y : integer ) : integer
+   x - x / y * y
+
+  
+
+

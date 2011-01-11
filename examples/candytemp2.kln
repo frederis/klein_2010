@@ -1,0 +1,11 @@
+
+// Computes a cooking temperature given
+// the normal temperature and an elevation
+
+
+main( temperature: integer, height: integer ) : integer
+   candytemp(temperature, height)
+   
+candytemp( t: integer, e: integer ) : integer
+   t - e / (100 + (100 + (100 + (100 + (50 + (25 + (13 + (3 + (3 + (3 + 3))))))))))
+      

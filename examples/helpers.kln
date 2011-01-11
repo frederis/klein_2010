@@ -1,0 +1,17 @@
+
+
+main( testArgument : integer ) : boolean
+    true
+
+expt( x : integer, y : integer) : integer
+   if 0 < y then
+      x * expt(x,y - 1)
+   else
+	  1
+   endif
+
+mod( x : integer, y : integer ) : integer
+   x - x / y * y
+
+  
+

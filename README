@@ -1,0 +1,77 @@
+
+#########################
+#      R E A D M E      #
+#                       #
+# by: Sean Fredericksen #
+#     Francisco Mota    #
+#     Josh McMulin      #
+#                       #
+#   date: Dec 9 2010    #
+#########################
+
+How to use the compiler
+-----------------------
+
+To use the compiler, you must run main.py from the command line. main.py reads
+in source code from standard input, and outputs the compiled code to standard
+output, with any compilation errors to standard error.
+
+For example, on a UNIX system with Python, the following command will read 
+code from the file "source-code.kln", compile it to "target.tm", and if there
+are any errors it will print them to the screen (standard error).
+
+    python main.py < source-code.kln > target.tm
+
+
+How the code is organized
+-------------------------
+
+tokens.py defines the token class, which represents individual tokens, as well as
+the various types of tokens. 
+
+scanner.py converts code into a stream of tokens.
+
+parser.py is a table-driven parser. It builds the parse table from a description
+of the grammar and then it uses the typical LL1 table-driven parsing algorithm to
+determine the syntactic validity of the program.
+
+kleinTypes.py is a semantic analyser. It traverses the AST and checks whether each 
+type is the correct type and prints out a symbol table.
+
+symboltable.py defines the symbol table and the entries that go in the symbol table.
+
+main.py is the program that reads code from standard input and tells the parser to
+parse it.
+
+emit.py handles the emission of actual target code, keeping track of the 
+current instruction address.
+
+codegen.py converts the AST into intermediate code, and using emit.py,
+converts the intermediate code into target code.
+
+Optional features
+-----------------
+
+'#include' allows you to include the code of another file in your file. For example,
+when reading a file with the line
+
+    #include "foo.kln"
+
+The compiler will look for the file "foo.kln" in the current directory (the one from
+which the compiler was invoked), and include its code inside the current file.
+
+To enable '#include', pass the '-i' or '--include' flags to the compiler. To 
+compile code in the 'include_examples' folder, you would need to be in that
+folder, and then do
+
+    $ python ../main.py --include < foo.kln
+
+to compile code with '#include' (or you can use the '-i' flag).
+
+Miscellaneous
+-------------
+
+There are sample klein programs in the examples folder, sample klein programs that
+use '#include' in the include_examples folder, and for testing purposes there are
+programs with syntactic errors in the syntax_errors folder, and semantic errors in
+semantic_errors folder.

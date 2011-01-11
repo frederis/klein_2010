@@ -1,0 +1,11 @@
+
+main( x:integer) :integer
+  fibonacci(x)
+    
+fibonacci( x:integer ) :integer
+  if x = 0 or (x = 1) then // expected expr, got LPAREN
+    x
+  else
+    fibonacci(x - 1) + fibonacci(x - 2)
+  endif
+  

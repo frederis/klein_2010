@@ -1,0 +1,61 @@
+// Test boolean operators and + or for logic and for shortcircuiting.
+
+// Successful output:
+// 100
+// 1
+// 2
+// 3
+// 4
+// 5
+// 6
+// 200
+// 1
+// 2
+// 3
+// 4
+// 5
+// 6
+// 1
+
+// ERROR CODES:
+// -1: error with short circuiting
+// -2: error with truth tables
+
+do(a : boolean, b : boolean) : boolean
+    a and b
+
+do4(a : boolean, b : boolean, c : boolean, d : boolean) : boolean
+    a and b and c and d
+
+assert(a : boolean, b : boolean) : boolean
+    if a = b then
+        true
+    else
+        prntF(-2)
+    endif
+
+prntF(n : integer) : boolean
+    print(n)
+    false
+
+prntT(n : integer) : boolean
+    print(n)
+    true
+
+testAnd() : boolean
+    print(100)
+    do4(assert(prntF(1) and prntF(-1), false),
+        assert(prntF(2) and prntT(-1), false),
+        assert(prntT(3) and prntF(4),  false),
+        assert(prntT(5) and prntT(6),  true))
+
+testOr() : boolean
+    print(200)
+    do4(assert(prntF(1) or prntF(2),  false),
+        assert(prntF(3) or prntT(4),  true),
+        assert(prntT(5) or prntF(-1), true),
+        assert(prntT(6) or prntT(-1), true))
+
+main() : boolean
+    do(testAnd(),
+       testOr())

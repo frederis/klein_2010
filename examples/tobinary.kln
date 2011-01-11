@@ -1,0 +1,34 @@
+//Returns a binary representation of a given
+//integer
+
+
+main( x : integer ) : integer
+    toBinary(x)
+
+toBinary( x : integer ) : integer
+   print(x)
+   if x < 2 then
+      x
+   else
+      binaryHelper(x,biggest2(x))
+   endif
+
+binaryHelper( x : integer, power : integer ) : integer
+   expt(10,power) + toBinary(x - expt(2,power))
+
+biggest2( x : integer ) : integer
+   biggest2helper(x,0)
+
+biggest2helper( x : integer, y : integer ) : integer
+  if not (x < expt(2, y)) then
+    biggest2helper(x, y + 1)
+  else
+    y - 1
+  endif
+
+expt( x : integer, y : integer) : integer
+   if 0 < y then
+      x * expt(x, y - 1)
+   else
+	  1
+   endif

@@ -1,0 +1,185 @@
+// File:   tictactoe.kln
+// Title:  tic-tac-toe player
+// Author: Francisco Mota
+// Date:   November 3, 2010
+//
+// Uses mini-max to play tictactoe. This program inputs nine numbers --
+// the board state  -- and outputs two numbers: whats the best move
+// for the current player, and who wins overall.
+//
+// The board state is represented as a 9-tuple, where 0 represents an
+// empty spot, 1 represents the first player, and -1 represents the second
+// player. The input `a b c d e f g h i` represents the board
+//     
+//     a b c
+//     d e f
+//     g h i
+//
+// The first output is a number that represents who wins. This can be:
+//
+//     0: the game is a tie
+//     1: the first player wins
+//     -1: the second player wins
+//
+// The second output is a number from 0 to 9 that determines what the 
+// best move (or one of the best moves) might be for the current player.
+// 0 means that the game is already over. 1 through 9 represent the
+// positions on the board, as such:
+//
+//     1 2 3
+//     4 5 6
+//     7 8 9
+//
+// Please note that this program is extremely inefficient. Theoretically,
+// it should work. Practically, you might not want to wait that long.
+//
+
+mod(a : integer, b : integer) : integer
+    a - (a / b) * b
+
+pow4(expt : integer) : integer
+    if expt = 0 then
+        1
+    else
+        4 * pow4(expt - 1)
+    endif
+
+boardGet(board : integer, pos : integer) : integer
+    mod(board / pow4(pos), 4)
+    
+boardSet(board : integer, pos : integer, value : integer) : integer
+    mod(board, pow4(pos)) + (board / pow4(pos) * 4 + value) * pow4(pos)
+
+isThreeInARow(b0 : integer, b1 : integer, b2 : integer) : boolean
+    // Do these three board values represent a 3-in-a-row?
+    b0 = b1 and b1 = b2 and not(b0 = 0)
+
+noSpaces(board : integer) : boolean
+    // is the board full?
+    noSpacesAux(board, 9)
+
+noSpacesAux(board : integer, posLeft : integer) : boolean
+    0 < posLeft and (mod(board, 4) = 0 or noSpacesAux(board / 4, posLeft - 1))
+
+whoWon(board : integer) : integer
+    // For an end state, determine who won. Return 0 otherwise.
+    whoWonAux(boardGet(board, 0), boardGet(board, 1), boardGet(board, 2),
+              boardGet(board, 3), boardGet(board, 4), boardGet(board, 5),
+              boardGet(board, 6), boardGet(board, 7), boardGet(board, 8))
+
+whoWonAux (b00 : integer, b01 : integer, b02 : integer,
+         b10 : integer, b11 : integer, b12 : integer,
+         b20 : integer, b21 : integer, b22 : integer) : integer
+    if isThreeInARow(b00, b01, b02) then b00 else
+    if isThreeInARow(b10, b11, b12) then b10 else
+    if isThreeInARow(b20, b21, b22) then b20 else
+    if isThreeInARow(b00, b10, b20) then b00 else
+    if isThreeInARow(b01, b11, b21) then b01 else
+    if isThreeInARow(b02, b12, b22) then b02 else
+    if isThreeInARow(b00, b11, b22) then b11 else
+    if isThreeInARow(b02, b11, b20) then b11 else
+       0 // nobody won
+    endif endif endif endif
+    endif endif endif endif
+
+isLeaf(board : integer) : boolean
+    // Are we done? Is the board position in an end state?
+    noSpaces(board) or 0 < whoWon(board)
+
+determinePlayer (board : integer) : integer
+    if mod(boardGet(board, 0) + boardGet(board, 1) + boardGet(board, 2) +
+           boardGet(board, 3) + boardGet(board, 4) + boardGet(board, 5) +
+           boardGet(board, 6) + boardGet(board, 7) + boardGet(board, 8), 3) = 1 then
+        2
+    else
+        1
+    endif
+
+opponent (player : integer) : integer
+    // Who is player playing against?
+    3 - player
+
+choose (player : integer, a : integer, b : integer) : integer
+    // Make the best choice for player.
+    if a = player then a else
+    if b = player then b else
+    if a = 0 then 0 else
+        b
+    endif endif endif 
+
+makePlay (player : integer, position : integer, board : integer) : integer
+    if boardGet(board, position) = 0 then
+        whoWinsPlay(opponent(player), boardSet(board, position, player))    
+    else
+        // this position is invalid, so make sure it isn't taken
+        opponent(player)
+    endif
+
+whoWinsPlayLoop (player : integer,
+                 best : integer, position : integer,
+                 board : integer) : integer
+    if best = player or position = 9 then
+        best
+    else  
+        whoWinsPlayLoop(
+            player,
+            choose(player, best, makePlay(player, position, board)),
+            position + 1,
+            board
+        )
+    endif
+
+whoWinsPlay (player : integer, board : integer) : integer
+    if isLeaf(board) then
+        whoWon(board)
+    else
+        whoWinsPlayLoop(player, opponent(player), 0, board)
+    endif
+
+whoWins (board : integer) : integer
+    whoWinsPlay(determinePlayer(board), board)
+
+isBetter (player : integer, a : integer, b : integer) : boolean
+    // is a better for player than b?
+    a = player or (a = 0 and not (b = player)) or b = 3
+    
+bestMovePlayLoopAux (player : integer, bestPos : integer, best : integer,
+                     current : integer, position : integer, board : integer):integer
+    if isBetter(player, current, best) then
+        bestMovePlayLoop(player, position, current, position + 1, board)
+    else
+        bestMovePlayLoop(player, bestPos, best, position + 1, board)
+    endif
+
+bestMovePlayLoop (player : integer, bestPos : integer,
+                     best : integer, position : integer,
+                     board : integer):integer
+    if best = player or position = 10 then
+        bestPos
+    else
+        bestMovePlayLoopAux(
+            player, bestPos, best,
+            makePlay(player, position, board), position,
+            board
+        )
+    endif
+
+bestMove (board : integer) : integer
+    if isLeaf(board) then
+        -1
+    else
+        bestMovePlayLoop(
+            determinePlayer(board), 0, 3, 0, board)
+    endif
+
+mainAux(board : integer) : integer
+    print(whoWins(board))
+    print(bestMove(board))
+    0
+
+main (b00 : integer, b01 : integer, b02 : integer,
+      b10 : integer, b11 : integer, b12 : integer,
+      b20 : integer, b21 : integer, b22 : integer) : integer
+     mainAux(b00 + 4*(b01 + 4*(b02
+         +4*(b10 + 4*(b11 + 4*(b12
+         +4*(b20 + 4*(b21 + 4*(b22)))))))))

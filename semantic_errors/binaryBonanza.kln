@@ -1,0 +1,14 @@
+
+main( x:integer ) :integer
+  factorial(x  // line 3 expected boolean
+        and x) // line 4 expected boolean // line 4 expected integer
+  
+factorial( x:integer ) :integer
+  if true = x            // line 7 conflicting types for equality
+     or x then           // line 8 expected boolean
+	  x + false          // line 9 expected integer
+        + false          // line 10 expected integer
+        / true           // line 11 expected integer
+  else
+	  x * factorial(x - true) // line 13 expected integer
+  endif

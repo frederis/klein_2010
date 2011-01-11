@@ -1,0 +1,11 @@
+
+main( x:integer) :integer
+  fibonacci(x)
+
+fibonacci( x:integer ) :integer
+  if 2 > x then // invalid token: >
+    x
+  else
+    fibonacci(x - 1) + fibonacci(x - 2)
+  endif
+  

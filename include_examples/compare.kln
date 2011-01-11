@@ -1,0 +1,9 @@
+//compares two numbers to see if they are 
+//equal to each other.
+
+compare ( numberx: integer, numbery: integer ) : boolean
+	if numberx = numbery then
+		numberx = numbery
+	else
+		not ( numberx = numbery )
+	endif		

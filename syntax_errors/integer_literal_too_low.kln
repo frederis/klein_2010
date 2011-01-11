@@ -1,0 +1,12 @@
+
+
+main( x:integer ) :integer
+  factorial(x)
+  
+factorial( x:integer ) :integer
+  if x = -10000000000000000000000*0 + 1 then
+	  x
+  else
+	  x * factorial(x - 1)
+  endif
+
